@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+@using BancoDeQuestoes.UI.Models;
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - C7S</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Banco de Questões", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+
+            <div class="navbar-collapse collapse">
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var x = ((BancoDeQuestoes.Dominio.Usuario)Session["user"]).Permissao;
+                    <text>
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Questões", "Listar", "Questao")</li>
+                            <li>@Html.ActionLink("Sobre", "About", "Home")</li>
+                            <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
+                            @if (x.ToString() == "Administrador")
+                            {
+                                <li>@Html.ActionLink("Configurações", "Configurar", "Questao")</li>
+                            }
+                        </ul>
+                    </text>
+                }
+
+                <ul class="nav navbar-nav navbar-right">
+
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><p style="color: #fff; margin-top:14px;">  @(Session["user"] != null ? "Olá " + ((BancoDeQuestoes.Dominio.Usuario)Session["user"]).Nome : "")</p></li>
+                        <li><a href="/Login/LogOff" id="logoffLink">Sair</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/Login/Cadastro" id="registerLink">Registre-se</a></li>
+                        <li><a href="/Login" id=" loginlink">Entrar</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Banco de Questões - C7S</p>
+        </footer>
+
+        <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-ui-1.9.2.min.js"></script>
+        <link href="~/JsLibraries/Jcrop-v0.9.12/css/jquery.Jcrop.min.css" rel="stylesheet" />
+        <script src="~/JsLibraries/Jcrop-v0.9.12/js/jquery.Jcrop.min.js"></script>
+        <script src="~/JsLibraries/file-upload/jquery.fileupload.js"></script>
+        <script src="~/JsLibraries/file-upload/jquery.fileupload-ui.js"></script>
+        <script src="~/JsLibraries/file-upload/jquery.iframe-transport.js"></script>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

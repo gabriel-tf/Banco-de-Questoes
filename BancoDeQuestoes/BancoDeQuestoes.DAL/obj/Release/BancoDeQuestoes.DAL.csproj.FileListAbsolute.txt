@@ -1,0 +1,17 @@
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\BancoDeQuestoes.DAL.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\BancoDeQuestoes.DAL.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\BancoDeQuestoes.Dominio.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\CryptSharp.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\FluentNHibernate.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\Iesi.Collections.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\NHibernate.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\BancoDeQuestoes.Dominio.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\CryptSharp.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\CryptSharp.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\FluentNHibernate.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\FluentNHibernate.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\Iesi.Collections.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\bin\Release\NHibernate.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\obj\Release\BancoDeQuestoes.DAL.csprojResolveAssemblyReference.cache
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\obj\Release\BancoDeQuestoes.DAL.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.DAL\obj\Release\BancoDeQuestoes.DAL.pdb

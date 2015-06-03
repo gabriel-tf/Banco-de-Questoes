@@ -1,0 +1,99 @@
+﻿@using BancoDeQuestoes.UI.Models
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>*@
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+        $("#btnLogin").on("click", function () {
+            $("#divLogin").show();
+            $("#divCadastro").hide();
+        });
+
+        $("#loginLink").on("click", function () {
+            $("#divLogin").show();
+            $("#divCadastro").hide();
+        });
+
+        $("#logoffLink").on("click", function () {
+            location.href="Home";
+        });
+
+        $("#btnEntrar").on("click", function () {
+            entrar();
+        });
+    });
+
+
+    function entrar()
+    {
+
+        var email = $("#logemail").val();
+        var senha = $("#logsenha").val();
+
+        if(email != "" && senha != "")
+        {
+            request = $.ajax({
+                type: "POST",
+                url: "/Login/LoginUser",
+                data: {
+                    email: email,
+                    senha: senha,
+                },
+                success: function (response) {
+                    if (response == "Professor") {
+                        //alert("Bem vindo!!");
+                        window.location.href = "/Questao/Listar";
+                    }
+                    else if (response == "Adm") {
+                        window.location.href = "/Questao/Configurar";
+                    }
+                    else {
+                        alert("Login ou senha incorretos")
+                    }
+                },
+                error: function (response) {
+                    alert("deu erro" + response);
+                }
+            });
+        } else if(email == "" && senha == "")
+        {
+            alert("Voce precisa digitar um email e senha");
+
+        }
+        else if(email != "" && senha == "")
+        {
+            alert("Voce precisa digitar uma senha válida");
+
+        }
+        else if(email == "" && senha != "")
+        {
+            alert("Voce precisa digitar um email válido");
+        }
+    }
+
+</script>
+    </br>
+    </br>
+
+<div id="divLogin">
+    <h2>Login</h2>
+    <label for="logemail">Email</label>
+    <input id="logemail" class="form-control" />
+    </br>
+    </br>
+    <label for="logsenha">Senha</label>
+    <input id="logsenha" type="password" class="form-control" />
+    </br>
+    </br>
+    <button type="button" id="btnEntrar" class="btn btn-primary">Entrar</button>
+</div>
+
+

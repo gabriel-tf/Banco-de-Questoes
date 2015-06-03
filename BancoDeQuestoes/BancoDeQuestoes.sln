@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoDeQuestoes.UI", "BancoDeQuestoes.UI\BancoDeQuestoes.UI.csproj", "{163E52D6-AEF1-497F-9F15-8EBB37142E10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoDeQuestoes.Dominio", "BancoDeQuestoes.Dominio\BancoDeQuestoes.Dominio.csproj", "{FA1B994A-CDFB-4504-8629-232116D6B891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoDeQuestoes.DAL", "BancoDeQuestoes.DAL\BancoDeQuestoes.DAL.csproj", "{CFCB8874-C1C0-44BD-BA65-2DB7F13CAB5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoDeQuestoes.Teste", "BancoDeQuestoes.Teste\BancoDeQuestoes.Teste.csproj", "{0AAD7AFB-329C-4E1C-A913-562D9586A042}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{84A48E3E-849D-4107-9A0D-8D6AAC4FBE74}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://julleannef.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BancoDeQuestoes.DAL\\BancoDeQuestoes.DAL.csproj
+		SccProjectName1 = BancoDeQuestoes.DAL
+		SccLocalPath1 = BancoDeQuestoes.DAL
+		SccProjectUniqueName2 = BancoDeQuestoes.Dominio\\BancoDeQuestoes.Dominio.csproj
+		SccProjectName2 = BancoDeQuestoes.Dominio
+		SccLocalPath2 = BancoDeQuestoes.Dominio
+		SccProjectUniqueName3 = BancoDeQuestoes.Teste\\BancoDeQuestoes.Teste.csproj
+		SccProjectName3 = BancoDeQuestoes.Teste
+		SccLocalPath3 = BancoDeQuestoes.Teste
+		SccProjectUniqueName4 = BancoDeQuestoes.UI\\BancoDeQuestoes.UI.csproj
+		SccProjectName4 = BancoDeQuestoes.UI
+		SccLocalPath4 = BancoDeQuestoes.UI
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{163E52D6-AEF1-497F-9F15-8EBB37142E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{163E52D6-AEF1-497F-9F15-8EBB37142E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163E52D6-AEF1-497F-9F15-8EBB37142E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{163E52D6-AEF1-497F-9F15-8EBB37142E10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA1B994A-CDFB-4504-8629-232116D6B891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA1B994A-CDFB-4504-8629-232116D6B891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA1B994A-CDFB-4504-8629-232116D6B891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA1B994A-CDFB-4504-8629-232116D6B891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFCB8874-C1C0-44BD-BA65-2DB7F13CAB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFCB8874-C1C0-44BD-BA65-2DB7F13CAB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFCB8874-C1C0-44BD-BA65-2DB7F13CAB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFCB8874-C1C0-44BD-BA65-2DB7F13CAB5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AAD7AFB-329C-4E1C-A913-562D9586A042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AAD7AFB-329C-4E1C-A913-562D9586A042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AAD7AFB-329C-4E1C-A913-562D9586A042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AAD7AFB-329C-4E1C-A913-562D9586A042}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

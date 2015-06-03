@@ -1,0 +1,419 @@
+﻿@model BancoDeQuestoes.UI.Models.AssuntoModel
+@{
+    ViewBag.Title = "Configurar";
+}
+
+<head>
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/jasny-bootstrap.js"></script>
+
+    <link href="~/Content/jasny-bootstrap.min.css" rel="stylesheet">
+    <title></title>
+</head>
+
+<script type="text/javascript">
+    var grausSelectDisc = "";
+    var grausSelectAssunto = "";
+    var anosSelectAssunto = "";
+    var anosSelectDisc = "";
+    var grausSelected = "";
+    var tipo = "";
+    var idDisciplina;
+    var idDiscAno;
+    var anoSelected;
+    var selectDisc = 0;
+
+    $(document).ready(function () {
+
+        $("#disc").hide();
+        $("#assunt").hide();
+
+        $("#btnInserirDisciplina").on("click", function () {
+            ListarGraus();
+            $("#nomeAssunt").val("");
+            $("#disc").show();
+            $("#assunt").hide();
+            selectDisc = 0;
+        });
+
+        $("#btnInserirAssunto").on("click", function () {
+            $("#nomeDisc").val("");
+            $("#disciplina").val("");
+            $("#assunt").show();
+            $("#disc").hide();
+            
+            if ( ($("#disciplina").val() == "") ) {
+                $("#grauAssunto").empty();
+                $("#anoAssunto").empty();
+            }
+        });
+
+        $("#btnAddDisciplina").on("click", function () {
+            AddGrau();
+            AddAno();
+            SalvarDisciplinaOuAssunto();
+        });
+
+        $("#btnAddAssunto").on("click", function () {
+            AddGrau();
+            AddAno();
+            selectDisc = $("#disciplina").val()
+            if (selectDisc != "Selecione") {
+                selectDisc = parseInt($("#disciplina").val());
+            }
+            SalvarDisciplinaOuAssunto();
+
+        });
+
+        $("#grauDisc").change(function () {
+            tipo = "disciplina";
+            AddAnosDeGraus(tipo);
+        });
+
+        $("#disciplina").change(function () {
+            idDisciplina = $('#disciplina').find(":selected").val();
+            idDiscAno = $('#disciplina').find(':selected').val();
+            ListarGraus();
+            GrausDisc(idDisciplina);
+            $("#grauAssunto").show();
+
+        });
+
+        ListarDisciplinas();
+    });
+
+    function SalvarDisciplinaOuAssunto() {
+        var nomeDisc = $("#nomeDisc").val();
+        var nomeAssunt = $("#nomeAssunt").val();
+        var grausDisc = $('#grauDisc :checkbox:checked').length > 0;
+        var anosDisc = $('#anoDisc :checkbox:checked').length > 0;
+        var grausAssunt = $('#grauAssunto :checkbox:checked').length > 0;
+        var anosAssunt = $('#anoAssunto :checkbox:checked').length > 0;
+
+        if ((nomeDisc != "") & (grausDisc != "") & (anosDisc != "")) {
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/SalvarDisciplinaOuAssunto",
+                data: {
+                    nomeDisc: nomeDisc,
+                    nomeAssunt: nomeAssunt,
+                    idDisc: selectDisc,
+                    graus: grausSelectDisc,
+                    anos: anosSelectDisc
+                },
+                success: function (response) {
+                    if (response == "") {
+                        alert("Deu certo");
+                        grausSelecionados = "";
+                        window.location.href = "/Questao/Configurar";
+                    }
+                }, error: function (response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        } else if ((nomeAssunt != "") & (selectDisc != "Selecione") & (grausAssunt != "") & (anosAssunt != "")) {
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/SalvarDisciplinaOuAssunto",
+                data: {
+                    nomeDisc: nomeDisc,
+                    nomeAssunt: nomeAssunt,
+                    idDisc: selectDisc,
+                    graus: grausSelectAssunto,
+                    anos: anosSelectAssunto
+                },
+                success: function (response) {
+                    if (response == "") {
+                        alert("Deu certo");
+                        window.location.href = "/Questao/Listar";
+                    }
+                }, error: function (response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+        else {
+            alert("Campos obrigatórios devem ser preenchidos!");
+        }
+    }
+
+    //Graus de Assunto
+    function GrausDisc(idDisciplina) {
+        var index = 1;
+        var grausDisciplina = "";
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/GrausDisc",
+            data: {
+                idDisciplina: idDisciplina
+            },
+            success: function (response) {
+                if (response == "selecione") {
+                    $("#grauAssunto").empty();
+                    $("#anoAssunto").empty();
+                    $("#grauAssunto").hide();
+
+                    alert("Selecione uma Disciplina");
+                } else {
+                    $.each(response, function (response, grau) {
+                        $("#grauAssunto_" + grau.GrauID).prop("checked", true);
+                    });
+                    if ($("#grauAssunto").prop("checked", true)) {
+                            tipo = "assunto";
+                            AddAnosDeGraus(tipo);
+                            //AnosDisc(idDiscAno)         
+                    }
+                    if (($("#grauAssunto").change)) {
+                        $("#grauAssunto").change(function () {
+                        tipo = "assunto";
+                        AddAnosDeGraus(tipo);
+                        });
+                    }
+                }
+                
+            },
+            error: function (response) {
+                alert("DEU ERRrO!");
+            }
+        });
+    }
+
+    //Anos de Assunto
+    function AnosDisc(idDiscAno) {
+        var index = 1;
+        var anosDisciplina = "";
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/AnosDisc",
+            data: {
+                idDiscAno: idDiscAno
+            },
+            success: function (response) {
+                if (response == "selecione") {
+                    $("#anoAssunto").empty();
+                    $("#grauAssunto").empty();
+                    alert("Selecione uma Disciplina");
+                } else {
+                    $.each(response, function (response, ano) {
+                        $("#anoAssunto_" + ano.AnoID).prop("checked", true);
+
+                    });
+                }
+            },
+            error: function (response) {
+                alert("DEU ERRrrrrrO!");
+            }
+        });
+    }
+
+    function AddGrau() {
+        var grauDisc = "";
+        var grauAssunto = "";
+
+        $('#grauDisc').find('input[type="checkbox"]:checked').each(function () {
+            var elemento1 = $(this);
+            grauDisc = elemento1.attr('id').split('_')[1] + ';';
+            grausSelectDisc += grauDisc;
+        });
+
+        $('#grauAssunto').find('input[type="checkbox"]:checked').each(function () {
+            var elemento2 = $(this);
+            grauAssunto = elemento2.attr('id').split('_')[1] + ';';
+            grausSelectAssunto += grauAssunto;
+        });
+    }
+
+    
+    function AddAno() {
+        var anoDisc = "";
+        var anoAssunto = "";
+
+        $('#anoDisc').find('input[type="checkbox"]:checked').each(function () {
+            var elemento1 = $(this);
+            anoDisc = elemento1.attr('id').split('_')[1] + ';';
+            anosSelectDisc += anoDisc;
+        });
+
+        $('#anoAssunto').find('input[type="checkbox"]:checked').each(function () {
+            var elemento2 = $(this);
+            anoAssunto = elemento2.attr('id').split('_')[1] + ';';
+            anosSelectAssunto += anoAssunto;
+        });
+    }
+
+    function AddAnosDeGraus(tipo) {
+        var grausSelected = "";
+        var idGrau = "";
+        var index = 1;
+        var anosDisciplina = "";
+        var labelAno = "<label>Ano:</label><br />";
+        var anosAssunto = "";
+
+        if (tipo == "disciplina") {
+            $('#grauDisc input:checked').each(function () {
+                idGrau = $(this).attr('value');
+                grausSelected += idGrau.split('grauDisc_');
+            });
+        }
+        else if (tipo == "assunto") {
+            $('#grauAssunto input:checked').each(function () {
+                idGrau = $(this).attr('value');
+                grausSelected += idGrau.split('grauAssunto_');
+            });
+        }
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/AnosConfigurar",
+            data: {
+                ids: grausSelected
+            },
+            success: function (response) {
+                grausSelected = "";
+                $("#anoDisc").empty();
+                $("#anoAssunto").empty();
+
+                if (tipo == "disciplina") {
+
+                    anosDisciplina = labelAno;
+                    $.each(response, function (response, ano) {
+                        anosDisciplina += "<input type='checkbox' id='anoDisciplina_" + index + "' value='anoDisciplina_" + index + "'/> " + ano.Descricao + "<br />";
+                        index++;
+                    });
+                    if (anosDisciplina != labelAno) {
+                        $('#anoDisc').append(anosDisciplina);
+                    }
+                }
+                else if (tipo == "assunto") {
+                    anosAssunto = "<label>Ano:</label><br />";
+                    $.each(response, function (response, ano) {
+                        anosAssunto += "<input type='checkbox' id='anoAssunto_" + index + "' value='anoAssunto_" + index + "'/> " + ano.Descricao + "<br />";
+                        index++;
+                    });
+                    $('#anoAssunto').append(anosAssunto);
+                    AnosDisc(idDiscAno)
+                }
+                
+
+            }, error: function (response) {
+                alert("DEU ERRO!");
+            }
+        });
+    }
+
+    function ListarGraus() {
+        var index = 1;
+        var grausDisciplina = "";
+        var grausAssunto = "";
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/ListarGraus",
+            success: function (response) {
+                $("#grauAssunto").empty();
+                $("#grauDisc").empty();
+
+                $.each(response, function (response, grau) {
+                    grausDisciplina += "<input type='checkbox' id='grauDisc_" + index + "' value='grauDisc_" + index + "'/> " + grau.Descricao + "<br />";
+                    grausAssunto += "<input type='checkbox' id='grauAssunto_" + index + "' value='grauAssunto_" + index + "'/> " + grau.Descricao + "<br />";
+                    index++;
+                });
+                $('#grauDisc').append(grausDisciplina);
+                $('#grauAssunto').append(grausAssunto);
+                
+            },
+            error: function (response) {
+                alert("DEU ERRO!" + response);
+            }
+        });
+    }
+
+    function ListarAnos() {
+        var index = 1;
+        var anosAssunto = "";
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/ListarAnos",
+            success: function (response) {
+                $("#anoAssunto").empty();
+                $("#anoDisc").empty();
+
+                $.each(response, function (response, ano) {
+                   anosAssunto += "<input type='checkbox' id='anoAssunto_" + index + "' value='anoAssunto_" + index + "'/> " + ano.Descricao + "<br />";
+                    index++;
+                });
+                $('#anoAssunto').append(anosAssunto);
+
+            },
+            error: function (response) {
+                alert("DEU ERRsssO!" + response);
+            }
+        });
+    }
+
+    function ListarDisciplinas() {
+        var select;
+        var disciplinaEdit = "Selecione";
+
+        request = $.ajax({
+            type: "POST",
+            url: "/Questao/ListarDisciplinas",
+            data: {
+                anoSelected: 0
+            },
+            success: function (response) {
+                if (response != null)
+                    $.each(response, function (response, disciplina) {
+                        select += "<option value='" + disciplina.DisciplinaID + "'> " + disciplina.Descricao + "</option>"
+                    });
+                $('#disciplina').append(select);
+                $('#disciplina').val(disciplinaEdit);
+
+            },
+            error: function (response) {
+                alert("DEU ERRO!" + response);
+            }
+        });
+    }
+</script>
+
+<br />
+<br />
+<button id="btnInserirDisciplina" class="btn btn-primary" value="disciplina">Inserir Disciplina</button>
+<button id="btnInserirAssunto" class="btn btn-primary" value="assunto">Inserir Assunto</button>
+
+<br />
+<br />
+<div id="disc">
+    <label for="nomeDisc">Nome da Disciplina:</label>
+    <input type="text" id="nomeDisc" class="form-control" />
+    <br />
+    <label for="grauDisc">Grau:</label><br />
+    <div id="grauDisc"></div>
+    <br />
+    <br />
+    <div id="anoDisc"></div>
+    <br />
+    <button id="btnAddDisciplina" class="btn btn-primary" value="disciplina">Salvar</button>
+</div>
+
+<div id="assunt">
+    <label for="nomeAssunt">Nome do Assunto:</label>
+    <input type="text" id="nomeAssunt" class="form-control" />
+    <br />
+    <label for="disciplina">Disciplina: </label><br />
+    <select id="disciplina">
+        <option id="Selecione"  value="">Selecione</option>
+    </select>
+    <br />
+    <br />
+    <label for="grauAssunto">Grau:</label><br />
+    <div id="grauAssunto"></div>
+    <br />
+    <div id="anoAssunto"></div>
+    <br />
+    <button id="btnAddAssunto" class="btn btn-primary" value="assunto">Salvar</button>
+</div>

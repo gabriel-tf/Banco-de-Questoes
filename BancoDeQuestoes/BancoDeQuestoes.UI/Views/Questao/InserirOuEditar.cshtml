@@ -1,0 +1,1067 @@
+﻿@model BancoDeQuestoes.UI.Models.QuestaoModel
+
+@{
+    ViewBag.Title = "inserir";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Inserir</h2>
+<head>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/jasny-bootstrap.min.css" rel="stylesheet" />
+    <link href="~/JsLibraries/Jcrop-v0.9.12/css/jquery.Jcrop.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui-1.9.2.min.js"></script>
+    <script src="~/JsLibraries/Jcrop-v0.9.12/js/jquery.Jcrop.min.js"></script>
+    <script src="~/JsLibraries/file-upload/jquery.fileupload.js"></script>
+    <script src="~/JsLibraries/file-upload/jquery.fileupload-ui.js"></script>
+    <script src="~/JsLibraries/file-upload/jquery.iframe-transport.js"></script>
+    <title>inserir</title>
+</head>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var tipo;
+        var idQuestao;
+        var idSubjetiva;
+        var resposta;
+        var grauSelected;
+        var anoSelected;
+        var disciplinaSelected;
+        var imagePath = "";
+        var dificuldade = "";
+        var listaDeComentarios = "";
+        var countComent = 1;
+        var userSessionId = "@(((BancoDeQuestoes.Dominio.Usuario) Session["user"]).Id)";
+        var jqXHRData;
+
+        $(document).ready(function() {
+
+            @if (Model != null)
+            {
+
+                if (Model.Tipo == "subjetiva")
+                {
+                    <text>$("#Obj").hide();</text>
+                }
+                else
+                {
+                    <text>$("#Sub").hide();</text>
+                }
+
+                if (Model.Comentario != "")
+                {
+                    <text>$("#coment_enunciado").show();</text>
+                    <text>$("#btnAddComentario").hide()</text>
+                }
+                else
+                {
+                    <text>$("#coment_enunciado").hide();</text>
+                }
+
+                foreach (var comentario in Model.Itens)
+                {
+                    if (comentario.ComentarioItem != "")
+                    {
+                        <text>$("#coment_item_" + countComent).show();</text>
+                        <text>$("#btnAddComentario_" + countComent).hide()</text>
+                        <text>countComent++;</text>
+                    }
+                    else
+                    {
+                        <text>$("#coment_item_" + countComent).hide();</text>
+                        <text>countComent++;</text>
+                    }
+                }
+            }
+            else
+            {
+                <text>$("#Sub").hide();</text>
+                <text>$("#Obj").hide();</text>
+                <text>$("#coment_enunciado").hide();</text>
+                <text>$("#coment_item_1").hide();</text>
+                <text>$("#coment_item_2").hide();</text>
+                <text>$("#coment_item_3").hide();</text>
+                <text>$("#coment_item_4").hide();</text>
+                <text>$("#coment_item_5").hide();</text>
+            }
+
+            $("#item_3").hide();
+            $("#item_4").hide();
+            $("#item_5").hide();
+
+            $("#btnInserirObjetiva").on("click", function() {
+                tipo = "objetiva";
+                SalvarQuestao();
+            });
+            $("#btnInserirSubjetiva").on("click", function() {
+                tipo = "subjetiva";
+                resposta = 1;
+                SalvarQuestao();
+            });
+
+            var coisa = 5;
+            var contador = 2;
+            $("#btnAdicionarItem").on("click", function() {
+
+                if (contador !== coisa) {
+                    if (contador === 2) {
+                        $("#item_3").show();
+                        contador = 3;
+                    } else if (contador === 3) {
+                        $("#item_4").show();
+                        contador = 4;
+                    } else {
+                        $("#item_5").show();
+                        contador = 5;
+                    }
+                } else {
+                    alert("Número máximo de itens alcançado");
+                }
+            });
+
+            $("input[name='tipo']").click(function() {
+                if ($("input[name='tipo']:checked").val() === 'objetiva') {
+                    console.log("objetiva");
+                    $("#Obj").show();
+                    $("#Sub").hide();
+                } else if ($("input[name='tipo']:checked").val() === 'subjetiva') {
+                    console.log("subjetiva");
+                    $("#Obj").hide();
+                    $("#Sub").show();
+                }
+            });
+
+            $("input[name='dificuldade']").click(function() {
+                switch ($("input[name='dificuldade']:checked").val()) {
+                    case "dificil":
+                        dificuldade = "dificil";
+                        break;
+                    case "media":
+                        dificuldade = "media";
+                        break;
+                    case "facil":
+                        dificuldade = "facil";
+                        break;
+                }
+            });
+
+            $("input[name='resposta']").click(function() {
+                var respostaCerta = $("input[name='resposta']:checked").val();
+                switch (respostaCerta) {
+                    case "item_1":
+                        resposta = 1;
+                        break;
+                    case "item_2":
+                        resposta = 2;
+                        break;
+                    case "item_3":
+                        resposta = 3;
+                        break;
+                    case "item_4":
+                        resposta = 4;
+                        break;
+                    case "item_5":
+                        resposta = 5;
+                        break;
+                }
+            });
+
+            $("#btnAddComentario").on("click", function() {
+                $("#coment_enunciado").show();
+                $("#btnAddComentario").hide();
+            });
+            $("#btnRmvComentario").on("click", function() {
+                $("#coment_enunciado").hide();
+                $("#btnAddComentario").show();
+                $("#txtComentario").val("");
+            });
+
+            $("#btnAddComentario_1").on("click", function() {
+                $("#coment_item_1").show();
+                $("#btnAddComentario_1").hide();
+
+            });
+            $("#btnRmvComentario_1").on("click", function() {
+                $("#coment_item_1").hide();
+                $("#btnAddComentario_1").show();
+                $("#comentarioItem_1").val("");
+            });
+
+            $("#btnAddComentario_2").on("click", function() {
+                $("#coment_item_2").show();
+                $("#btnAddComentario_2").hide();
+            });
+            $("#btnRmvComentario_2").on("click", function() {
+                $("#coment_item_2").hide();
+                $("#btnAddComentario_2").show();
+                $("#comentarioItem_2").val("");
+            });
+
+            $("#btnAddComentario_3").on("click", function() {
+                $("#coment_item_3").show();
+                $("#btnAddComentario_3").hide();
+            });
+            $("#btnRmvComentario_3").on("click", function() {
+                $("#coment_item_3").hide();
+                $("#btnAddComentario_3").show();
+                $("#comentarioItem_3").val("");
+            });
+
+            $("#btnAddComentario_4").on("click", function() {
+                $("#coment_item_4").show();
+                $("#btnAddComentario_4").hide();
+            });
+            $("#btnRmvComentario_4").on("click", function() {
+                $("#coment_item_4").hide();
+                $("#btnAddComentario_4").show();
+                $("#comentarioItem_4").val("");
+            });
+
+            $("#btnAddComentario_5").on("click", function() {
+                $("#coment_item_5").show();
+                $("#btnAddComentario_5").hide();
+            });
+            $("#btnRmvComentario_5").on("click", function() {
+                $("#coment_item_5").hide();
+                $("#btnAddComentario_5").show();
+                $("#comentarioItem_5").val("");
+            });
+
+
+            //---------------FILTRO-------------------
+
+            $("#ano").prop("disabled", true);
+            $("#disciplina").prop("disabled", true);
+            $("#assunto").prop("disabled", true);
+
+            $("#grau").change(function() {
+                grauSelected = $('#grau').find(":selected").val();
+                $("#disciplina").val("");
+                $("#disciplina").prop("disabled", true);
+                $("#assunto").val("");
+                $("#assunto").prop("disabled", true);
+                ListarAnos();
+            });
+
+            $("#ano").change(function() {
+                anoSelected = $('#ano').find(":selected").val();
+                $("#assunto").val("");
+                $("#assunto").prop("disabled", true);
+                ListarDisciplinas();
+            });
+
+            $("#disciplina").change(function() {
+                disciplinaSelected = $('#disciplina').find(":selected").val();
+                ListarAssuntos();
+            });
+            //---------------FILTRO END-------------------
+
+            ListarGraus();
+            //ValidarUsuario();
+
+            //--------------------------- UPLOAD IMAGE ---------------------------
+
+            $('#fu-my-simple-upload').fileupload({
+                url: '/File/UploadFile',
+                dataType: 'json',
+                add: function(e, data) {
+                    jqXHRData = data;
+                },
+                done: function(event, data) {
+                    if (data.result.isUploaded) {
+                        $("#hf-uploaded-image-path").val(data.result.filePath);
+
+                        destroyCrop();
+
+                        $("#uploaded-image").attr("src", data.result.filePath + "?t=" + new Date().getTime());
+
+                        initCrop();
+
+                        $("#crop-image-area").fadeIn("slow");
+                        $("#save-image-area").fadeIn("slow");
+                    }
+                },
+                fail: function(event, data) {
+                    if (data.files[0].error) {
+                        alert(data.files[0].error);
+                    }
+                }
+            });
+
+        });
+
+        $("#hl-start-upload").on('click', function() {
+            if (jqXHRData) {
+                jqXHRData.submit();
+            }
+
+            $('#cropModal').modal('show');
+            return false;
+        });
+
+        //--------------------------- UPLOAD END ---------------------------
+        //--------------------------- CROP IMAGE ---------------------------
+        var imageCropWidth = 0;
+        var imageCropHeight = 0;
+        var cropPointX = 0;
+        var cropPointY = 0;
+
+        $("#hl-crop-image").on("click", function(e) {
+            e.preventDefault();
+            cropImage();
+        });
+
+        $("#btn-my-submit").on("click", function(e) {
+            $("#saveModal").modal('hide');
+        });
+
+        $("#btn-back").on("click", function(e) {
+            $("#saveModal").modal('hide');
+            $("#cropModal").modal('show');
+        });
+
+        function initCrop() {
+            $('#uploaded-image').Jcrop({
+                onChange: setCoordsAndImgSize,
+                aspectRatio: 1
+            });
+        }
+
+        function destroyCrop() {
+            var jcropApi = $('#uploaded-image').data('Jcrop');
+
+            if (jcropApi !== undefined) {
+                jcropApi.destroy();
+                $('#uploaded-image').attr('style', "").attr("src", "");
+            }
+        }
+
+        function setCoordsAndImgSize(e) {
+
+            imageCropWidth = e.w;
+            imageCropHeight = e.h;
+
+            cropPointX = e.x;
+            cropPointY = e.y;
+        }
+
+        function cropImage() {
+
+            if (imageCropWidth === 0 && imageCropHeight === 0) {
+                alert("Please select crop area.");
+                return;
+            }
+
+            $.ajax({
+                url: '/Image/CropImage',
+                type: 'POST',
+                data: {
+                    imagePath: $("#hf-uploaded-image-path").val(),
+                    cropPointX: cropPointX,
+                    cropPointY: cropPointY,
+                    imageCropWidth: imageCropWidth,
+                    imageCropHeight: imageCropHeight
+                },
+                success: function(data) {
+
+                    $("#hf-cropped-image-path").val(data.photoPath);
+
+                    $("#my-cropped-image")
+                        .attr("src", data.photoPath + "?t=" + new Date().getTime())
+                        .show();
+
+                    $("#btn-my-submit").fadeIn("slow");
+                    $('#cropModal').modal('hide');
+                    $('#saveModal').modal('show');
+                },
+                error: function(data) {}
+            });
+        }
+
+        //--------------------------- CROP END ---------------------------
+
+        (function($) {
+            var defaults;
+            $.event.fix = (function(originalFix) {
+                return function(event) {
+                    event = originalFix.apply(this, arguments);
+                    if (event.type.indexOf('copy') === 0 || event.type.indexOf('paste') === 0) {
+                        event.clipboardData = event.originalEvent.clipboardData;
+                    }
+                    return event;
+                };
+            })($.event.fix);
+            defaults = {
+                callback: $.noop,
+                matchType: /image.*/
+            };
+            return $.fn.pasteImageReader = function(options) {
+                if (typeof options === "function") {
+                    options = {
+                        callback: options
+                    };
+                }
+                options = $.extend({}, defaults, options);
+                return this.each(function() {
+                    var $this, element;
+                    element = this;
+                    $this = $(this);
+                    return $this.bind('paste', function(event) {
+                        var clipboardData, found;
+                        found = false;
+                        clipboardData = event.clipboardData;
+                        return Array.prototype.forEach.call(clipboardData.types, function(type, i) {
+                            var file, reader;
+                            if (found) {
+                                return;
+                            }
+                            if (type.match(options.matchType) || clipboardData.items[i].type.match(options.matchType)) {
+                                file = clipboardData.items[i].getAsFile();
+                                reader = new FileReader();
+                                reader.onload = function(evt) {
+                                    return options.callback.call(element, {
+                                        dataURL: evt.target.result,
+                                        event: evt,
+                                        file: file,
+                                        name: file.name
+                                    });
+                                };
+                                jqXHRData = file;
+                                reader.readAsDataURL(file);
+                                return found = true;
+                            }
+                        });
+                    });
+                });
+            };
+        })(jQuery);
+
+        $("html").pasteImageReader(function(results) {
+            var dataURL, filename;
+            filename = results.filename, dataURL = results.dataURL;
+            $data.text(dataURL);
+            $size.val(results.file.size);
+            $type.val(results.file.type);
+            $test.attr('href', dataURL);
+            var img = document.createElement('img');
+            img.src= dataURL;
+            var w = img.width;
+            var h = img.height;
+            $width.val(w);
+            $height.val(h);
+            return $(".active").css({
+                backgroundImage: "url(" + dataURL + ")"
+            }).data({'width':w, 'height':h});
+        });
+
+        var $data, $size, $type, $test, $width, $height;
+        $(function() {
+            $data = $('.data');
+            $size = $('.size');
+            $type = $('.type');
+            $test = $('#test');
+            $width = $('#width');
+            $height = $('#height');
+            $('.target').on('click', function() {
+                var $this = $(this);
+                var bi = $this.css('background-image');
+                if (bi != 'none') {
+                    $data.text(bi.substr(4, bi.length - 6));
+                }
+
+                $('.active').removeClass('active');
+                $this.addClass('active');
+
+                $this.toggleClass('contain');
+
+                $width.val($this.data('width'));
+                $height.val($this.data('height'));
+                if ($this.hasClass('contain')) {
+                    $this.css({ 'width': $this.data('width'), 'height': $this.data('height'), 'z-index': '10' });
+                } else {
+                    $this.css({ 'width': '', 'height': '', 'z-index': '' });
+                }
+
+            });
+        });
+
+        function SalvarQuestao() {
+
+            var count = 2;
+            var idItens = "";
+
+            var enunciado = $("#txtEnunciado").val();
+            var comentario = $("#txtComentario").val();
+
+            var objetiva1 = $("#txtItem_1").val();
+            var comentario1 = $("#comentarioItem_1").val();
+
+            var objetiva2 = $("#txtItem_2").val();
+            var comentario2 = $("#comentarioItem_2").val();
+
+            var itensRespostas = objetiva1 + "," + objetiva2;
+            var itensComentarios = comentario1 + "," + comentario2;
+
+            var objetiva3 = $("#txtItem_3").val();
+            var comentario3 = $("#comentarioItem_3").val();
+            if (objetiva3 !== "" & objetiva3 != undefined) {
+                count ++;
+                itensRespostas += "," + objetiva3;
+                itensComentarios += "," + comentario3;
+            }
+
+            var objetiva4 = $("#txtItem_4").val();
+            var comentario4 = $("#comentarioItem_4").val();
+            if (objetiva4 !== "" & objetiva4 != undefined) {
+                count ++;
+                itensRespostas += "," + objetiva4;
+                itensComentarios += "," + comentario4;
+            }
+
+            var objetiva5 = $("#txtItem_5").val();
+            var comentario5 = $("#comentarioItem_5").val();
+            if (objetiva5 !== "" & objetiva5 != undefined) {
+                count ++;
+                itensRespostas += "," + objetiva5;
+                itensComentarios += "," + comentario5;
+            }
+
+            var idDisciplina = $('#disciplina').val();
+            var idAssunto = $('#assunto').val();
+
+            @if (Model != null && Model.Itens.Count > 0)
+            {
+                <text>idItens = "@Model.IdItens";</text>
+            }
+
+            if ((enunciado !== "") & (dificuldade !== "") & (disciplina !== "")) {
+                request = $.ajax({
+                    type: "POST",
+                    url: "/Questao/SalvarQuestao",
+                    data: {
+                        idQuestao: @(Model != null ? Model.Codigo : 0),
+                        idSubjetiva: @(Model != null && Model.Tipo == "subjetiva" ? Model.ItemSubjetiva.Codigo : 0),
+                        idItens: idItens,
+                        enunciado: enunciado,
+                        comentario: comentario,
+                        dificuldade: dificuldade,
+                        idDisciplina: idDisciplina,
+                        idAssunto: idAssunto,
+                        tipo: tipo,
+                        itensRespostas: itensRespostas,
+                        itensComentarios: itensComentarios,
+                        resposta: resposta,
+                        count: count
+                    },
+                    success: function(response) {
+                        if (response === "") {
+                            alert("Questao salva!");
+                            window.location.href = "/Questao/Listar";
+                        }
+                    },
+                    error: function(response) {
+                        alert("DEU ERRO!" + response);
+                    }
+                });
+            } else {
+                alert("Campos obrigatórios devem ser preenchidos!");
+            }
+        }
+
+        function ListarGraus() {
+            var select;
+            var grauEdit = "";
+            @if (Model != null)
+            {
+                <text>grauEdit = "@Model.Grau";</text>
+            }
+
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/ListarGraus",
+                success: function(response) {
+
+                    $.each(response, function(response, grau) {
+                        select += "<option value='" + grau.GrauID + "'>" + grau.Descricao + "</option>";
+                    });
+                    $('#grau').append(select);
+                    $('#grau').val(grauEdit);
+
+                },
+                error: function(response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+
+        function ListarAnos() {
+            $("#ano").empty();
+            $('#ano').append('<option value="">Selecione</option>');
+            var select;
+            var anosEdit = "";
+            @if (Model != null)
+            {
+                <text>anosEdit = "@Model.Anos";</text>
+            }
+
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/ListarAnosConfigurar",
+                data: {
+                    grauSelected: grauSelected
+                },
+                success: function(response) {
+
+                    $.each(response, function(response, ano) {
+                        select += "<option value='" + ano.AnoID + "'>" + ano.Descricao + "</option>";
+                    });
+                    $('#ano').append(select);
+                    $('#ano').val(anosEdit);
+                    $("#ano").prop("disabled", false);
+                },
+                error: function(response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+
+        function ListarDisciplinas() {
+            $("#disciplina").empty();
+            $('#disciplina').append('<option value="">Selecione</option>');
+            var select;
+            var disciplinaEdit = "";
+
+            @if (Model != null)
+            {
+                <text>disciplinaEdit = "@Model.Disciplina";</text>
+            }
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/ListarDisciplinas",
+                data: {
+                    anoSelected: anoSelected
+                },
+                success: function(response) {
+
+                    $.each(response, function(response, disciplina) {
+                        select += "<option  value='" + disciplina.DisciplinaID + "'>" + disciplina.Descricao + "</option>";
+                    });
+
+                    $('#disciplina').append(select);
+                    $('#disciplina').val(disciplinaEdit);
+                    $("#disciplina").prop("disabled", false);
+                },
+                error: function(response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+
+        function ListarAssuntos() {
+            $("#assunto").empty();
+            $('#assunto').append('<option value="">Selecione</option>');
+            var select;
+            var assuntoEdit = "";
+            @if (Model != null)
+            {
+                <text>assuntoEdit = "@Model.Assunto";</text>
+            }
+
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/ListarAssuntos",
+                data: {
+                    disciplinaSelected: disciplinaSelected
+                },
+                success: function(response) {
+
+                    $.each(response, function(response, assunto) {
+                        select += "<option value='" + assunto.AssuntoID + "'>" + assunto.Descricao + "</option>";
+                    });
+                    $('#assunto').append(select);
+                    $('#assunto').val(assuntoEdit);
+                    $("#assunto").prop("disabled", false);
+                },
+                error: function(response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+
+        function ValidarUsuario() {
+            var autorId;
+            @if (Model != null)
+            {
+                <text>autorId = "@Model.Autor.Id"</text>;
+            }
+
+            request = $.ajax({
+                type: "POST",
+                url: "/Questao/ValidarUsuario",
+                data: {
+                    autorId: autorId,
+                    userSessionId: userSessionId
+                },
+                success: function(response) {
+                    if (response) {
+                        alert("Você não possúi acesso");
+                        window.location.href = "/Questao/Listar";
+                    }
+                },
+                error: function(response) {
+                    if (response === "Erro") {
+                        alert("DEU ERRO!" + response);
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="container">
+    <form>
+        <div class="form-group">
+            <h6>Obs: Campos com <span style="color:red">*</span> são obrigatórios</h6><br>
+
+            <div id="filtro" class="bs-docs-example">
+                <div class="left">
+                    <label>Nível de Ensino</label><span style="color:red">*</span><br>
+                    <select class="step1" id="grau">
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+                <div class="left">
+                    <label>Ano</label><span style="color:red">*</span><br>
+                    <select class="step2" id="ano">
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+                <div class="left">
+                    <label>Disciplina</label><span style="color:red">*</span><br>
+                    <select class="step3" id="disciplina">
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+                <div class="left">
+                    <label>Assunto</label><span style="color:red">*</span><br>
+                    <select class="step4" id="assunto">
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="left">
+                <br>
+                <label>Tipo</label><span style="color:red">*</span><br>
+                @if (Model != null)
+                {
+                    if (Model.Tipo == "objetiva")
+                    {
+                        <input type="radio" name="tipo" value="objetiva" checked="checked" /><span> Objetiva</span>
+                        <input type="radio" name="tipo" value="subjetiva" /><span> Subjetiva</span>
+                    }
+                    else
+                    {
+                        <input type="radio" name="tipo" value="objetiva" /><span> Objetiva</span>
+                        <input type="radio" name="tipo" value="subjetiva" checked="checked" /><span> Subjetiva</span>
+                    }
+                }
+                else
+                {
+                    <input type="radio" name="tipo" value="objetiva" /><span> Objetiva</span>
+                    <input type="radio" name="tipo" value="subjetiva" /><span> Subjetiva</span>
+                }
+            </div>
+
+            <div class="left">
+                <br>
+                <label>Dificuldade</label><span style="color:red">*</span><br>
+                @if (Model != null)
+                {
+                    if (Model.Dificuldade == "dificil")
+                    {
+                        <input type="radio" name="dificuldade" value="dificil" checked="checked" /> <span> Dificíl</span>
+                        <input type="radio" name="dificuldade" value="media" /> <span> Média</span>
+                        <input type="radio" name="dificuldade" value="facil" /> <span>Fácil</span>
+                        <script> dificuldade = "dificil"; </script>
+                    }
+                    else if (Model.Dificuldade == "media")
+                    {
+                        <input type="radio" name="dificuldade" value="dificil" /> <span> Dificíl</span>
+                        <input type="radio" name="dificuldade" value="media" checked="checked" /> <span> Média</span>
+                        <input type="radio" name="dificuldade" value="facil" /> <span>Fácil</span>
+                        <script> dificuldade = "media"; </script>
+                    }
+                    else
+                    {
+                        <input type="radio" name="dificuldade" value="dificil" /> <span> Dificíl</span>
+                        <input type="radio" name="dificuldade" value="media" /> <span> Média</span>
+                        <input type="radio" name="dificuldade" value="facil" checked="checked" /> <span>Fácil</span>
+                        <script> dificuldade = "facil"; </script>
+                    }
+                }
+                else
+                {
+                    <input type="radio" name="dificuldade" value="dificil" /> <span> Dificíl</span>
+                    <input type="radio" name="dificuldade" value="media" /> <span> Média</span>
+                    <input type="radio" name="dificuldade" value="facil" /> <span>Fácil</span>
+                }
+            </div>
+
+            <div class="enunciado">
+                <br>
+                <label for="txtEnunciado">Enunciado</label><span style="color:red">*</span>
+                <textarea class="form-control" rows="4" maxlength="300" id="txtEnunciado">@(Model != null ? Model.Enunciado : "")</textarea>
+                <br>
+                <button title="Adicionar Comentário" id="btnAddComentario" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                <div class="comentarioItem">
+                    <div id="coment_enunciado">
+                        <label for="txtComentario">Comentário</label>
+                        <button title="Remover Comentário" id="btnRmvComentario" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                        <textarea class="form-control" rows="2" maxlength="200" id="txtComentario">@(Model != null ? Model.Comentario : "")</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <label>Imagem</label>
+                <br>
+                @using (Html.BeginForm("InserirOuEditar", "Questao"))
+                {
+                    @Html.Hidden("UploadedImagePath", string.Empty, new { id = "hf-uploaded-image-path" })
+                    @Html.HiddenFor(m => m.CroppedImagePath, new { id = "hf-cropped-image-path" })
+
+                    <div class="container fluid">
+                        <div class="row">
+                            <div class="span4 target" >
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<p>@Html.TextBoxFor(m => m.MyFile, new { @class="span4 target", id = "fu-my-simple-upload" })</p>*@
+                    <p>@Html.TextBoxFor(m => m.MyFile, new { id = "fu-my-simple-upload", type = "file" })</p>
+                    //<button type="button" class="btn btn-primary btn-lg" id="hl-start-upload" data-toggle="modal" data-target="#myModal">Start Upload</button>
+                    <p>
+                        <a href="#" class="btn btn-primary" id=" hl-start-upload" data-toggle="modal" data-target="#cropModal">Start Upload</a>
+                    </p>
+
+                }
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div id="Sub" class="container">
+    <form id="formSubjetiva">
+        <div class="form-group">
+            <br>
+            <input id="btnInserirSubjetiva" type="button" class="btn btn-primary" value="Salvar" />
+        </div>
+    </form>
+</div>
+
+<div id="Obj" class="container">
+    <form id="formObjetiva">
+        <hr />
+        <div class="form-group">
+            @if (Model != null && Model.Itens.Count > 0)
+            {
+
+                var index = 1;
+                foreach (var item in Model.Itens)
+                {
+                    <div>
+                        <label for="txtItem_@index">Item @index</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" id="txtItem_@index">@item.Descricao</textarea>
+                    </div>
+                    <br>
+
+                    <button title="Adicionar Comentário" id="btnAddComentario_@index" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem_@index">
+                        <div id="coment_item_@index">
+                            <label for="comentarioItem_@index">Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_@index" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="comentarioItem_@index" id="comentarioItem_@index">@(Model != null ? item.ComentarioItem : "")</textarea>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="respostaCorreta">
+                        @if (item.EhResposta)
+                        {
+                            <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_@index" checked="checked" /><span> Resposta certa</span>
+                            <script> resposta = @index; </script>
+                        }
+                        else
+                        {
+                            <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_@index" /><span> Resposta certa</span>
+                        }
+                    </div>
+                        index++;
+                }
+            }
+            else
+            {
+                <div>
+                    <div>
+                        <label for="txtItem_1">Item 1</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" name="txtItem_1" id="txtItem_1"></textarea>
+                    </div>
+                    <br>
+                    <button title="Adicionar Comentário" id="btnAddComentario_1" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem">
+                        <div id="coment_item_1">
+                            <label>Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_1" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="txtItem_1" id="comentarioItem_1"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="respostaCorreta">
+                        <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_1" /><span> Resposta certa</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        <label for="txtItem_2">Item 2</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" name="txtItem2" id="txtItem_2"></textarea>
+                    </div>
+                    <br>
+                    <button title="Adicionar Comentário" id="btnAddComentario_2" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem">
+                        <div id="coment_item_2">
+                            <label>Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_2" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="txtItem_2" id="comentarioItem_2"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="respostaCorreta">
+                        <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_2" /><span> Resposta certa</span>
+                    </div>
+                </div>
+
+                <div id="item_3">
+                    <div>
+                        <label for="txtItem_3">Item 3</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" name="txtItem3" id="txtItem_3"></textarea>
+                    </div>
+                    <br>
+                    <button title="Adicionar Comentário" id="btnAddComentario_3" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem">
+                        <div id="coment_item_3">
+                            <label>Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_3" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="txtItem_3" id="comentarioItem_3"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="respostaCorreta">
+                        <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_3" /><span> Resposta certa</span>
+                    </div>
+                </div>
+
+                <div id="item_4">
+                    <div>
+                        <label for="txtItem_4">Item 4</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" name="txtItem4" id="txtItem_4"></textarea>
+                    </div>
+                    <br>
+                    <button title="Adicionar Comentário" id="btnAddComentario_4" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem">
+                        <div id="coment_item_4">
+                            <label>Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_4" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="txtItem_4" id="comentarioItem_4"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="respostaCorreta">
+                        <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_4" /><span> Resposta certa</span>
+                    </div>
+                </div>
+
+                <div id="item_5">
+                    <div>
+                        <label for="txtItem_5">Item 5</label>
+                        <textarea class="form-control itemQuestao" rows="2" maxlength="300" name="txtItem5" id="txtItem_5"></textarea>
+                    </div>
+                    <br>
+                    <button title="Adicionar Comentário" id="btnAddComentario_5" type="button" class="btn btn-toolbar"><span class='glyphicon glyphicon-plus'></span> Comentário</button>
+                    <div class="comentarioItem">
+                        <div id="coment_item_5">
+                            <label>Comentário</label>
+                            <button title="Remover Comentário" id="btnRmvComentario_5" type="button" class="btn btn-xs"><i class='glyphicon glyphicon-remove'></i></button>
+                            <textarea class="form-control itemQuestao" rows="1" maxlength="300" name="txtItem_5" id="comentarioItem_5"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="respostaCorreta">
+                        <i class='glyphicon glyphicon-ok'></i> <input type="radio" name="resposta" value="item_5" /><span> Resposta certa</span>
+                    </div>
+                </div>
+
+            }
+        </div>
+        <input id="btnAdicionarItem" type="button" class="btn btn-primary" value="Adicionar Item" />
+        <input id="btnInserirObjetiva" type="button" class="btn btn-primary" value="Salvar" />
+
+    </form>
+</div>
+
+<!-- Modal -->
+
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="cropModalLabel">Salvar Imagem</h4>
+            </div>
+            <div class="modal-body" style=" margin: 0 auto; text-align: center">
+                <div id="crop-image-area" style="display:none; margin: 0 auto; text-align: center">
+                    <p style=" margin: 0 auto; text-align : center"><img id="uploaded-image" src="#" /></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" id="hl-crop-image" class="btn btn-primary">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="saveModalLabel">Salvar Imagem</h4>
+            </div>
+            <div class="modal-body">
+                <div id="save-image-area" style="display: none; margin: 0 auto; text-align: center">
+                    <p>
+                        <img id="my-cropped-image" class="estilo-teste" src="#" style="display: none;" />
+                    </p>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" id="btn-back" class="btn btn-default">Voltar</button>
+                <button type="button" id="btn-my-submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

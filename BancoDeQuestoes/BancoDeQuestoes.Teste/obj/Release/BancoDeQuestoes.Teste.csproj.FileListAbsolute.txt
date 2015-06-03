@@ -1,0 +1,16 @@
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.Teste.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.Teste.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.DAL.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\FluentNHibernate.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\Iesi.Collections.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\NHibernate.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.Dominio.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.DAL.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\FluentNHibernate.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\FluentNHibernate.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\Iesi.Collections.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\NHibernate.xml
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\bin\Release\BancoDeQuestoes.Dominio.pdb
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\obj\Release\BancoDeQuestoes.Teste.csprojResolveAssemblyReference.cache
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\obj\Release\BancoDeQuestoes.Teste.dll
+C:\Users\Gabriel\Documents\IVIA-FA7\BancoDeQuestoes\BancoDeQuestoes.Teste\obj\Release\BancoDeQuestoes.Teste.pdb

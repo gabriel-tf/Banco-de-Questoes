@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Cadastro";
+}
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#btnCadastro").on("click", function () {
+            $("#divLogin").hide();
+            $("#divCadastro").show();
+        });
+
+        $("#registerLink").on("click", function () {
+            $("#divLogin").hide();
+            $("#divCadastro").show();
+        });
+
+        $("#btnCadastrar").on("click", function () {
+            cadastrar();
+        });
+    });
+
+    function cadastrar()
+    {
+        var nome = $("#txtnome").val();
+        var email = $("#txtemail").val();
+        var senha = $("#txtsenha").val();
+
+        if(nome != "" && email != "" && senha != "")
+        {
+            request = $.ajax({
+                type: "POST",
+                url: "/Login/CadastraUser",
+                data: {
+                    id: @(Model != null ? Model.Id : 0),
+                    nome: nome,
+                    email: email,
+                    senha: senha
+                },
+                success: function (response) {
+                    if (response == "") {
+                        alert("Usuário cadastrado!");
+                        window.location.href = "/Login/Index";
+                    }else{alert("Já existe o Email solicitado!");}
+                }, error: function (response) {
+                    alert("DEU ERRO!" + response);
+                }
+            });
+        }
+        else {
+            alert("Voce precisa preencer todos os campos!");
+        }
+    }
+</script>
+</br>
+</br>
+
+
+<div id="divCadastro">
+    <h2>Cadastro</h2>
+    <label for="txtnome">Nome</label>
+    <input id="txtnome" class="form-control" />
+    </br>
+    </br>
+    <label for="txtemail">Email</label>
+    <input id="txtemail" class="form-control" />
+    </br>
+    </br>
+    <label for="txtsenha">Senha</label>
+    <input id="txtsenha" type="password" class="form-control" />
+    </br>
+    </br>
+
+    <button type="button" id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
+    </br>
+    </br>
+</div>

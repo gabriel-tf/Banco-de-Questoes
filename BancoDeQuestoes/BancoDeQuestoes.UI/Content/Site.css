@@ -1,0 +1,80 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.comentarioItem {
+    padding-left: 50px;
+    width:675px;
+}
+
+.respostaCorreta {
+    text-align:right;
+    padding-right:436px;
+}
+
+.right {
+    float:right;
+    padding-top:18px;
+}
+
+.left {
+    float:left;
+    width:25%;
+}
+
+.enunciado {
+    float:left;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select {
+    max-width: 350px;
+}
+
+textarea {
+    max-width: 675px;
+    background-color: white;
+}
+
+#cssTable th, td
+{
+    text-align:center; 
+    vertical-align:middle;
+}
+
+.target {
+  border: solid 1px #aaa;
+  min-height: 200px;
+  margin-top: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 300ms all;
+  position: relative;
+}
+
+.contain {
+    background-size: cover;
+  position: relative;
+  z-index: 10;
+  top: 0px;
+  left: 0px;
+}
+
+.active {
+  box-shadow: 0px 0px 10px 10px rgba(0,0,255,.4);
+}

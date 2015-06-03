@@ -1,0 +1,81 @@
+﻿@model BancoDeQuestoes.UI.Models.QuestaoModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="page-header">
+    <h2>Questão</h2>
+</div>
+
+<head>
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+    <title></title>
+</head>
+
+<div class="container">
+    <form role="form">
+        <div class="form-group">
+            <br>
+            <div class="panel panel-primary">
+                <div class=" panel-heading">
+                    <h3 class="panel-title">Enunciado</h3>
+                </div>
+                <div class="panel-body">
+                    <p>@(Model != null ? Model.Enunciado : "") </p>
+                </div>
+                @if (Model.Comentario != "")
+                {
+                    <div class="panel-footer">
+                        <span>Comentário:</span> @Model.Comentario
+                    </div>
+                }
+
+            </div>
+
+            @if (Model.Tipo == "subjetiva")
+            {
+                @*<div class="list-group" style="padding-left:75px;">
+                    <a class="list-group-item active">
+                        <div class="list-group-item-heading">
+                            <label for="txtResposta">Resposta: </label>
+                        </div>
+                        <div class="list-group-item-text">
+                            <p>@(Model != null && Model.Tipo == "subjetiva" ? Model.ItemSubjetiva.Descricao : "")</p>
+                        </div>
+                    </a>
+                </div>*@
+            }
+            else
+            {
+                var index = 1;
+                foreach (var item in Model.Itens)
+                {
+                    <div class="list-group" style="padding-left:75px;">
+                        <a class="list-group-item active">
+                            <div class="list-group-item-heading">
+                                <label for="txtItem_@index">Item @index:</label>
+                            </div>
+                            <div class="list-group-item-text">
+                                <p>@item.Descricao</p>
+                                @if (item.ComentarioItem != "")
+                                {
+                                    <p><label>Comentário:</label> @item.ComentarioItem</p>
+                                }
+                                @if (item.EhResposta)
+                                {
+                                    <p style="font-weight: bold;"><i class='glyphicon glyphicon-ok'></i> Resposta Certa</p>
+                                }
+                                else
+                                { <p></p>}
+                            </div>
+                        </a>
+                    </div>
+                 index++;
+                }
+            }
+        </div>
+    </form>
+</div>
+
+
